@@ -1,0 +1,20 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+	    <!-- Set AppCompat’s color theming attrs -->
+	    <item name="colorPrimary">@color/primary_red</item>
+	    <item name="colorPrimaryDark">@color/primary_dark_red</item>
+	    <!-- Set Actionbar Props -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+</resources>
