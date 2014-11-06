@@ -16,5 +16,11 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
     </style>
+    
+    
+    <!-- Shadow Style -->
+    <style name="ShadowStyle">
+        <item name="android:background">@drawable/rectangle_normal</item>
+    </style>
 
 </resources>

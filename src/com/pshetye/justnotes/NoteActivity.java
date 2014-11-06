@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,7 +26,18 @@ public class NoteActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(LOG_TAG, "Inside onCreate");
-        
+		
+		Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                MyNote note = new MyNote((int) System.currentTimeMillis(),intent.getStringExtra(Intent.EXTRA_SUBJECT),
+                        intent.getStringExtra(Intent.EXTRA_TEXT), "");
+                db.addNote(note);
+            }
+        }
         Animation slideBottom = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_slide_in_bottom);
         
         // Add Button - Holder Fragment

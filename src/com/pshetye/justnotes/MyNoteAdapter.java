@@ -48,11 +48,22 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
         	Log.d(LOG_TAG, "Inflating NOW");
             view = mInflater.inflate(R.layout.note_list_item, null);
         }
+        
+        Log.d(LOG_TAG, position + "Title = " + mNotes.get(position).getTitle());
+        Log.d(LOG_TAG, position + "Note  = " + mNotes.get(position).getNote());
+        Log.d(LOG_TAG, position + "Date  = " + mNotes.get(position).getDate());
 
-        TextView tv = (TextView) view.findViewById(R.id.textView1);
+        TextView tv0 = (TextView) view.findViewById(R.id.textView0);
+        TextView tv1 = (TextView) view.findViewById(R.id.textView1);
         TextView tv2 = (TextView) view.findViewById(R.id.textView2);
         view.setTag(position);
-        tv.setText(mNotes.get(position).getNote());
+        if (mNotes.get(position).getTitle().isEmpty()) {
+            tv0.setVisibility(View.GONE);
+            tv1.setTextSize(20);
+        } else {
+            tv0.setText(mNotes.get(position).getTitle());
+        }
+        tv1.setText(mNotes.get(position).getNote());
         tv2.setText(mNotes.get(position).getDate());
 
         view.setOnClickListener(new OnClickListener() {
@@ -62,6 +73,7 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
                 // TODO Auto-generated method stub
                 Log.d(LOG_TAG, "Inside onClick");
                 MyNote note = mNotes.get((int) v.getTag());
+                ViewNoteActivity.launchInput((BaseActivity) mContext, v, note);
             }
         });
 

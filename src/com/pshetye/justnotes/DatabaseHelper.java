@@ -24,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  
     // Contacts Table Columns names
     private static final String KEY_ID = "id";
+    private static final String KEY_TITLE = "pTitle";
     private static final String KEY_NOTE = "pNote";
     private static final String KEY_DATE = "pDate";
     
@@ -43,7 +44,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + MYNOTES + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NOTE + " TEXT, " 
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_TITLE + " TEXT, "
+		        + KEY_NOTE + " TEXT, " 
 				+ KEY_DATE + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
 	}
@@ -52,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 		System.out.print("Inside onUpgrade in DatabaseHelper");
-		
+		/*
 		if (oldVersion < newVersion) {
 			if (newVersion == 2) {
 				db.execSQL("ALTER TABLE " + MYNOTES + " ADD COLUMN " + KEY_DATE
@@ -67,6 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			    db.update(MYNOTES, values, "", null);
 			}
 		}
+		*/
 	}
 
 	// Adding new contact
@@ -74,16 +78,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		 
 	    ContentValues values = new ContentValues();
-	    values.put(KEY_NOTE, note.getNote()); // Contact Name
-	    values.put(KEY_ID, note.getID()); // Contact Name
-	    values.put(KEY_DATE, note.getDate()); // Contact Name
+	    values.put(KEY_NOTE, note.getNote()); // Note
+        values.put(KEY_TITLE, note.getTitle()); // Title
+	    values.put(KEY_ID, note.getID()); // ID
+	    values.put(KEY_DATE, note.getDate()); // Date
 	 
 	    // Inserting Row
 	    db.insert(MYNOTES, null, values);
 	    db.close(); // Closing database connection		
 	}
 	 
-	// Getting single contact
+	// Getting single note
 	public MyNote getNote(long _id) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		 
@@ -111,8 +116,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	        do {
 	            MyNote note = new MyNote();
 	            note.setID(Integer.parseInt(cursor.getString(0)));
-	            note.setPNote(cursor.getString(1));
-	            note.setDate(cursor.getString(2));
+	            note.setPTitle(cursor.getString(1));
+	            note.setPNote(cursor.getString(2));
+	            note.setDate(cursor.getString(3));
 	            // Adding contact to list
 	            noteList.add(note);
 	        } while (cursor.moveToNext());
@@ -158,6 +164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		 
 	    ContentValues values = new ContentValues();
+        values.put(KEY_TITLE, note.getTitle());
 	    values.put(KEY_NOTE, note.getNote());
 	    values.put(KEY_DATE, MyNote.NoteDateFormat.format(new Date()));
 	 
