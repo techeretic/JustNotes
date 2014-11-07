@@ -22,7 +22,7 @@
         android:isScrollContainer="true"
         android:hint="Title"
         android:textStyle="bold"
-        android:inputType="textShortMessage"
+        android:inputType="textShortMessage|textMultiLine|textCapWords"
         android:background="@color/background_floating_material_light"
         android:layout_below="@id/my_awesome_toolbar" >
     </EditText>
@@ -42,7 +42,7 @@
         android:gravity="top|start"        
     	android:isScrollContainer="true"
         android:hint="Add a quick note"
-        android:inputType="textMultiLine"
+        android:inputType="textLongMessage|textMultiLine|textWebEditText"
         android:background="@color/background_floating_material_light"
         android:layout_below="@id/editText0" >
     </EditText>

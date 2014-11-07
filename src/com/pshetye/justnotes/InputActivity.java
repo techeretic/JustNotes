@@ -64,14 +64,16 @@ public class InputActivity extends BaseActivity {
                     }
                 } else {
                     Log.d(LOG_TAG,"mNote != null");
-                    if (textView0.getText().toString().isEmpty() && textView1.getText().toString().isEmpty()) {
+                    if (textView0.getText().toString().isEmpty()
+                    		&& textView1.getText().toString().isEmpty()) {
+                        Log.d(LOG_TAG,"EVERYTHING BLANK!!!");
                         finish();
+                    } else {
+	                    mNote.setPNote(textView1.getText().toString());                    
+	                    mNote.setPTitle(textView0.getText().toString());
+	                    BaseActivity.db.updateNote(mNote);
+	                    finish();
                     }
-                    
-                    mNote.setPNote(textView1.getText().toString());                    
-                    mNote.setPTitle(textView0.getText().toString());
-                    BaseActivity.db.updateNote(mNote);
-                    finish();
                 }
             }
         });

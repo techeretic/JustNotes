@@ -21,6 +21,8 @@ public class NoteActivity extends BaseActivity {
     private FloatingActionButton fab_add_btn = null;
     private static List<MyNote> sMyNotes = new ArrayList<MyNote>();
     MyNoteAdapter mNoteAdapter = null;
+    int index = 0;
+    ListView list;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,9 @@ public class NoteActivity extends BaseActivity {
                 db.addNote(note);
             }
         }
+        
+        list = (ListView) findViewById(R.id.ListView);
+        
         Animation slideBottom = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_slide_in_bottom);
         slideBottom.setDuration(750);
         
@@ -67,19 +72,19 @@ public class NoteActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 
-        Animation slideBottom = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_fade_in);
-        slideBottom.setDuration(750);
 		sMyNotes = BaseActivity.db.getAllNotes();		
 		mNoteAdapter = new MyNoteAdapter(this, sMyNotes);
         ListView gv = (ListView) findViewById(R.id.ListView);
         gv.setAdapter(mNoteAdapter);
-        gv.setAnimation(slideBottom);
+        
+        list.setSelectionFromTop(index, 0);
 	}
 	
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		index = list.getFirstVisiblePosition();
 		mNoteAdapter.clear();
 	}
 

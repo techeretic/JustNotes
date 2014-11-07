@@ -21,7 +21,7 @@
         android:background="@color/background_floating_material_light"
         android:scrollbars = "vertical"
         android:textSize="22sp"
-        android:textStyle="bold"
+        android:textStyle="bold" android:transitionName="photo_hero"
         android:layout_below="@id/my_awesome_toolbar" />
 	    
     <TextView
