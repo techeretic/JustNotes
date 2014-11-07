@@ -50,7 +50,7 @@ public class ViewNoteActivity extends BaseActivity {
             textView0.setMovementMethod(new ScrollingMovementMethod());
             textView0.setPaddingRelative(0, 30, 0, 0);
         }
-        
+
         textView1.setText(noteContent);
         textView1.setMovementMethod(new ScrollingMovementMethod());
         

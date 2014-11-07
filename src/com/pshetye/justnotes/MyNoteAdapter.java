@@ -2,6 +2,7 @@
 package com.pshetye.justnotes;
 
 import android.content.Context;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,15 +48,14 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
         // TODO Auto-generated method stub
         View view = convertView;
         if (convertView == null) {
-        	Log.d(LOG_TAG, "Inflating NOW");
+            Log.d(LOG_TAG, "Inflating NOW");
             view = mInflater.inflate(R.layout.note_list_item, null);
         }
-/*
-        Animation slideBottom = AnimationUtils.loadAnimation(mContext, R.anim.abc_fade_in);
-        slideBottom.setDuration(1000);
-        
-        view.setAnimation(slideBottom);
-*/
+        /*
+         * Animation slideBottom = AnimationUtils.loadAnimation(mContext,
+         * R.anim.abc_fade_in); slideBottom.setDuration(1000);
+         * view.setAnimation(slideBottom);
+         */
         Log.d(LOG_TAG, position + "Title = " + mNotes.get(position).getTitle());
         Log.d(LOG_TAG, position + "Note  = " + mNotes.get(position).getNote());
         Log.d(LOG_TAG, position + "Date  = " + mNotes.get(position).getDate());
@@ -68,9 +68,10 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
             tv0.setVisibility(View.GONE);
             tv1.setTextSize(20);
         } else {
-        	tv0.setVisibility(View.VISIBLE);
+            tv0.setVisibility(View.VISIBLE);
             tv0.setText(mNotes.get(position).getTitle());
         }
+
         tv1.setText(mNotes.get(position).getNote());
         tv2.setText(mNotes.get(position).getDate());
 

@@ -21,6 +21,8 @@
         android:background="@color/background_floating_material_light"
         android:scrollbars = "vertical"
         android:textSize="22sp"
+        android:autoLink="web"
+        android:linksClickable="true"
         android:textStyle="bold" android:transitionName="photo_hero"
         android:layout_below="@id/my_awesome_toolbar" />
 	    
@@ -37,6 +39,8 @@
         android:background="@color/background_floating_material_light"
         android:scrollbars = "vertical"
         android:textSize="15sp"
+        android:autoLink="web"
+        android:linksClickable="true"
         android:layout_below="@id/notetitleview" />
 
 
