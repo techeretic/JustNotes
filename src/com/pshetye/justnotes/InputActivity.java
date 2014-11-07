@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,14 +19,26 @@ public class InputActivity extends BaseActivity {
     private static final String LOG_TAG = "InputActivity";
 
     private FloatingActionButton fab_save_btn = null;
+    
+    private MyNote mNote = null;
+
+    private String noteContent = null;
+
+    private String noteTitle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "Inside onCreate");
+        
+        mNote = (MyNote) getIntent().getParcelableExtra("Note");
+        if (mNote != null) {
+            noteContent = mNote.getNote();
+            noteTitle = mNote.getTitle();
+        }
 
-        Animation fadeIn = AnimationUtils
-                .loadAnimation(getApplicationContext(), R.anim.abc_fade_in);
+        Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_slide_in_top);
+        slideIn.setDuration(750);
 
         // Add Button - Holder Fragment
         fab_save_btn = new FloatingActionButton.Builder(this)
@@ -33,7 +46,7 @@ public class InputActivity extends BaseActivity {
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
                 .withGravity(Gravity.TOP | Gravity.END).withMargins(15, 15, 0, 0).create();
 
-        fab_save_btn.setAnimation(fadeIn);
+        fab_save_btn.setAnimation(slideIn);
         fab_save_btn.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -41,15 +54,35 @@ public class InputActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 EditText textView0 = (EditText) findViewById(R.id.editText0);
                 EditText textView1 = (EditText) findViewById(R.id.editText1);
-                if (!textView0.getText().toString().isEmpty()
-                        || !textView1.getText().toString().isEmpty()) {
-                    MyNote note = new MyNote((int) System.currentTimeMillis(), textView0.getText()
-                            .toString(), textView1.getText().toString(), "");
-                    BaseActivity.db.addNote(note);
+                if (mNote == null) {
+                    if (!textView0.getText().toString().isEmpty()
+                            || !textView1.getText().toString().isEmpty()) {
+                        MyNote note = new MyNote((int) System.currentTimeMillis(), textView0.getText()
+                                .toString(), textView1.getText().toString(), "");
+                        BaseActivity.db.addNote(note);
+                        finish();
+                    }
+                } else {
+                    Log.d(LOG_TAG,"mNote != null");
+                    if (textView0.getText().toString().isEmpty() && textView1.getText().toString().isEmpty()) {
+                        finish();
+                    }
+                    
+                    mNote.setPNote(textView1.getText().toString());                    
+                    mNote.setPTitle(textView0.getText().toString());
+                    BaseActivity.db.updateNote(mNote);
                     finish();
                 }
             }
         });
+        
+        if (mNote != null) {
+            EditText textView0 = (EditText) findViewById(R.id.editText0);
+            EditText textView1 = (EditText) findViewById(R.id.editText1);
+            
+            textView0.setText(noteTitle);
+            textView1.setText(noteContent);
+        }
     }
 
     @Override
@@ -62,6 +95,14 @@ public class InputActivity extends BaseActivity {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 activity, transitionView, LOG_TAG);
         Intent intent = new Intent(activity, InputActivity.class);
+        ActivityCompat.startActivity(activity, intent, options.toBundle());
+    }
+
+    public static void launchInput(BaseActivity activity, View transitionView, MyNote note) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                activity, transitionView, LOG_TAG);
+        Intent intent = new Intent(activity, InputActivity.class);
+        intent.putExtra("Note", note);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 }
