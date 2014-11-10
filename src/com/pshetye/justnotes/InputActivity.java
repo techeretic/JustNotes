@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -61,17 +60,22 @@ public class InputActivity extends BaseActivity {
                                 .toString(), textView1.getText().toString(), "");
                         BaseActivity.db.addNote(note);
                         finish();
+                        setResult(RESULT_OK);
                     }
                 } else {
                     Log.d(LOG_TAG,"mNote != null");
                     if (textView0.getText().toString().isEmpty()
                     		&& textView1.getText().toString().isEmpty()) {
                         Log.d(LOG_TAG,"EVERYTHING BLANK!!!");
+                        setResult(RESULT_CANCELED);
                         finish();
                     } else {
 	                    mNote.setPNote(textView1.getText().toString());                    
 	                    mNote.setPTitle(textView0.getText().toString());
 	                    BaseActivity.db.updateNote(mNote);
+	                    Intent i = new Intent();
+	                    i.putExtra("Note", mNote);
+	                    setResult(RESULT_OK, i);
 	                    finish();
                     }
                 }
@@ -94,8 +98,13 @@ public class InputActivity extends BaseActivity {
     }
 
     public static void launchInput(BaseActivity activity, View transitionView, String url) {
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                activity, transitionView, LOG_TAG);
+        /*ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        activity, transitionView, LOG_TAG);*/
+		ActivityOptionsCompat options = ActivityOptionsCompat
+				.makeScaleUpAnimation(transitionView, (int)transitionView.getTranslationX(),
+						(int)transitionView.getTranslationY(), transitionView.getWidth(),
+						transitionView.getHeight());
         Intent intent = new Intent(activity, InputActivity.class);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
@@ -105,6 +114,13 @@ public class InputActivity extends BaseActivity {
                 activity, transitionView, LOG_TAG);
         Intent intent = new Intent(activity, InputActivity.class);
         intent.putExtra("Note", note);
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, BaseActivity.INPUT_CODE, options.toBundle());
+    }
+    
+    @Override
+    public void onBackPressed() {
+    	// TODO Auto-generated method stub
+    	setResult(RESULT_CANCELED);
+    	super.onBackPressed();
     }
 }

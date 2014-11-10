@@ -23,8 +23,6 @@
             android:ellipsize="end"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:autoLink="web"
-            android:linksClickable="true"
             android:theme="@style/Base.TextAppearance.AppCompat.Headline" />
 	    <TextView
 	        android:id="@+id/textView1"
@@ -38,8 +36,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
             android:textSize="18sp"
-            android:autoLink="web"
-            android:linksClickable="true"
 	        android:ellipsize="end" />
 	    <TextView
 	        android:id="@+id/textView2"

@@ -29,6 +29,12 @@ public class ViewNoteActivity extends BaseActivity {
     
     private MyNote mNote = null;
     
+    private TextView noteTitleView;
+    
+    private TextView noteTextView;
+    
+    private boolean updated = false;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,19 +46,19 @@ public class ViewNoteActivity extends BaseActivity {
         
         Log.d(LOG_TAG, "noteTitle == " + noteTitle);
 
-        TextView textView1 = (TextView) findViewById(R.id.noteview);
-        TextView textView0 = (TextView) findViewById(R.id.notetitleview);
+        noteTextView = (TextView) findViewById(R.id.noteview);
+        noteTitleView = (TextView) findViewById(R.id.notetitleview);
         if (noteTitle.isEmpty()) {
-            textView0.setVisibility(View.GONE);
-            textView1.setPaddingRelative(0, 30, 0, 0);
+            noteTitleView.setVisibility(View.GONE);
+            noteTextView.setPaddingRelative(0, 30, 0, 0);
         } else {
-            textView0.setText(noteTitle);
-            textView0.setMovementMethod(new ScrollingMovementMethod());
-            textView0.setPaddingRelative(0, 30, 0, 0);
+            noteTitleView.setText(noteTitle);
+            noteTitleView.setMovementMethod(new ScrollingMovementMethod());
+            noteTitleView.setPaddingRelative(0, 30, 0, 0);
         }
 
-        textView1.setText(noteContent);
-        textView1.setMovementMethod(new ScrollingMovementMethod());
+        noteTextView.setText(noteContent);
+        noteTextView.setMovementMethod(new ScrollingMovementMethod());
         
         Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_slide_in_top);
         slideIn.setDuration(750);
@@ -104,9 +110,9 @@ public class ViewNoteActivity extends BaseActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 InputActivity.launchInput(ViewNoteActivity.this, v, mNote);
-                finish();
             }
         });
+        
     }
 
     @Override
@@ -116,12 +122,16 @@ public class ViewNoteActivity extends BaseActivity {
     }
     
     public static void launchInput(BaseActivity activity, View transitionView, MyNote note) {
-        ActivityOptionsCompat options =
+        /*ActivityOptionsCompat options =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity, transitionView, LOG_TAG);
+                        activity, transitionView, LOG_TAG);*/
+		ActivityOptionsCompat options = ActivityOptionsCompat
+				.makeScaleUpAnimation(transitionView, (int)transitionView.getTranslationX(),
+						(int)transitionView.getTranslationY(), transitionView.getWidth(),
+						transitionView.getHeight());
         Intent intent = new Intent(activity, ViewNoteActivity.class);
         intent.putExtra("Note", note);
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, BaseActivity.VIEW_CODE, options.toBundle());
     }
 
     private void shareNote() {
@@ -136,6 +146,36 @@ public class ViewNoteActivity extends BaseActivity {
     private void deleteNote() {
         Log.d(LOG_TAG, "Inside DeleteNote");
         BaseActivity.db.deleteNote(mNote);
+        setResult(RESULT_OK);
         finish();
     }
+    
+    @Override
+    public void onBackPressed() {
+    	// TODO Auto-generated method stub
+    	if (updated) {
+    		setResult(RESULT_OK);
+    	} else {
+    		setResult(RESULT_CANCELED);
+    	}
+    	super.onBackPressed();
+    }
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		// Check which request we're responding to
+	    if (requestCode == BaseActivity.INPUT_CODE) {
+	        // Make sure the request was successful
+	        if (resultCode == RESULT_OK) {
+	        	mNote = data.getParcelableExtra("Note");
+	        	noteTitleView.setText(mNote.getTitle());
+	        	noteTextView.setText(mNote.getNote());
+	        	updated = true;
+	        } else {
+	        	setResult(RESULT_CANCELED);
+	        }
+	    }
+	}
 }

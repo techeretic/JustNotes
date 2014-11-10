@@ -8,17 +8,18 @@
 	<include
 	    android:id="@+id/my_awesome_toolbar"
 	    layout="@layout/activity_toolbar"/>
-
-    <ListView 
+	
+	<android.support.v7.widget.RecyclerView
 	    android:id="@+id/ListView"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:horizontalSpacing="15dp"
-        android:verticalSpacing="15dp"
-	    android:stretchMode="columnWidth"
-	    android:gravity="clip_vertical|clip_horizontal"
-	    android:padding="15dp"
-	    android:divider="@android:color/transparent"
-        android:dividerHeight="15.0sp"/>
+	    android:scrollbars="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        android:gravity="clip_vertical|clip_horizontal"
+        android:padding="5dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5.0sp"
+        android:stretchMode="columnWidth" />
 
 </LinearLayout>

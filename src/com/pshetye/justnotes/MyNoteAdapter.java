@@ -2,16 +2,12 @@
 package com.pshetye.justnotes;
 
 import android.content.Context;
-import android.transition.Explode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -56,6 +52,7 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
          * R.anim.abc_fade_in); slideBottom.setDuration(1000);
          * view.setAnimation(slideBottom);
          */
+        
         Log.d(LOG_TAG, position + "Title = " + mNotes.get(position).getTitle());
         Log.d(LOG_TAG, position + "Note  = " + mNotes.get(position).getNote());
         Log.d(LOG_TAG, position + "Date  = " + mNotes.get(position).getDate());
