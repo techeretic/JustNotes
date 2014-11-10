@@ -52,7 +52,7 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
          * R.anim.abc_fade_in); slideBottom.setDuration(1000);
          * view.setAnimation(slideBottom);
          */
-        
+
         Log.d(LOG_TAG, position + "Title = " + mNotes.get(position).getTitle());
         Log.d(LOG_TAG, position + "Note  = " + mNotes.get(position).getNote());
         Log.d(LOG_TAG, position + "Date  = " + mNotes.get(position).getDate());
@@ -79,7 +79,7 @@ public class MyNoteAdapter extends ArrayAdapter<MyNote> {
                 // TODO Auto-generated method stub
                 Log.d(LOG_TAG, "Inside onClick");
                 MyNote note = mNotes.get((int) v.getTag());
-                ViewNoteActivity.launchInput((BaseActivity) mContext, v, note);
+                ViewNoteActivity.launchViewNote((BaseActivity) mContext, v, note);
             }
         });
 

@@ -1,7 +1,7 @@
+
 package com.pshetye.justnotes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
     private final static String LOG_TAG = "RecycleAdapter";
+
     private static List<MyNote> mNotes = new ArrayList<MyNote>();
+
     private static Context mContext = null;
 
     // Provide a reference to the views for each data item
@@ -24,26 +26,30 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView noteTitle;
+
         public TextView noteText;
+
         public TextView noteDate;
+
         public View parentView;
+
         public ViewHolder(View view) {
             super(view);
             parentView = view;
             noteTitle = (TextView) view.findViewById(R.id.textView0);
             noteText = (TextView) view.findViewById(R.id.textView1);
             noteDate = (TextView) view.findViewById(R.id.textView2);
-            
+
             parentView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-	                Log.d(LOG_TAG, "Inside onClick");
-	                MyNote note = mNotes.get((int) v.getTag());
-	                ViewNoteActivity.launchInput((BaseActivity) mContext, v, note);
-				}
-			});
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    Log.d(LOG_TAG, "Inside onClick");
+                    MyNote note = mNotes.get((int) v.getTag());
+                    ViewNoteActivity.launchViewNote((BaseActivity) mContext, v, note);
+                }
+            });
         }
     }
 
@@ -51,16 +57,14 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public RecycleAdapter(List<MyNote> objects, Context context) {
         mNotes = objects;
         mContext = context;
-        Collections.reverse(mNotes);
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public RecycleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public RecycleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                               .inflate(R.layout.note_list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_list_item, parent,
+                false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -83,5 +87,4 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public int getItemCount() {
         return mNotes.size();
     }
-
 }

@@ -1,3 +1,4 @@
+
 package com.pshetye.justnotes;
 
 import android.content.Intent;
@@ -26,24 +27,24 @@ public class ViewNoteActivity extends BaseActivity {
     private String noteContent = null;
 
     private String noteTitle = null;
-    
+
     private MyNote mNote = null;
-    
+
     private TextView noteTitleView;
-    
+
     private TextView noteTextView;
-    
+
     private boolean updated = false;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "Inside onCreate");
-        
+
         mNote = (MyNote) getIntent().getParcelableExtra("Note");
         noteContent = mNote.getNote();
         noteTitle = mNote.getTitle();
-        
+
         Log.d(LOG_TAG, "noteTitle == " + noteTitle);
 
         noteTextView = (TextView) findViewById(R.id.noteview);
@@ -59,16 +60,16 @@ public class ViewNoteActivity extends BaseActivity {
 
         noteTextView.setText(noteContent);
         noteTextView.setMovementMethod(new ScrollingMovementMethod());
-        
-        Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.abc_slide_in_top);
+
+        Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.abc_slide_in_top);
         slideIn.setDuration(750);
-        
+
         // Share Button - Note Fragment
         fab_share_btn = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_share))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
-                .withGravity(Gravity.TOP | Gravity.END)
-                .withMargins(15, 15, 0, 0).create();
+                .withGravity(Gravity.TOP | Gravity.END).withMargins(15, 15, 0, 0).create();
         fab_share_btn.setAnimation(slideIn);
         fab_share_btn.setOnClickListener(new OnClickListener() {
 
@@ -83,8 +84,7 @@ public class ViewNoteActivity extends BaseActivity {
         fab_delete_btn = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_discard))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
-                .withGravity(Gravity.TOP | Gravity.END)
-                .withMargins(0, 15, 65, 0).create();
+                .withGravity(Gravity.TOP | Gravity.END).withMargins(0, 15, 65, 0).create();
 
         fab_delete_btn.setAnimation(slideIn);
         fab_delete_btn.setOnClickListener(new OnClickListener() {
@@ -100,8 +100,7 @@ public class ViewNoteActivity extends BaseActivity {
         fab_edit_btn = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_edit))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
-                .withGravity(Gravity.TOP | Gravity.END)
-                .withMargins(0, 15, 130, 0).create();
+                .withGravity(Gravity.TOP | Gravity.END).withMargins(0, 15, 130, 0).create();
 
         fab_edit_btn.setAnimation(slideIn);
         fab_edit_btn.setOnClickListener(new OnClickListener() {
@@ -112,7 +111,7 @@ public class ViewNoteActivity extends BaseActivity {
                 InputActivity.launchInput(ViewNoteActivity.this, v, mNote);
             }
         });
-        
+
     }
 
     @Override
@@ -120,62 +119,65 @@ public class ViewNoteActivity extends BaseActivity {
         // TODO Auto-generated method stub
         return R.layout.activity_view_note;
     }
-    
-    public static void launchInput(BaseActivity activity, View transitionView, MyNote note) {
-        /*ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity, transitionView, LOG_TAG);*/
-		ActivityOptionsCompat options = ActivityOptionsCompat
-				.makeScaleUpAnimation(transitionView, (int)transitionView.getTranslationX(),
-						(int)transitionView.getTranslationY(), transitionView.getWidth(),
-						transitionView.getHeight());
+
+    public static void launchViewNote(BaseActivity activity, View transitionView, MyNote note) {
+        /*
+         * ActivityOptionsCompat options =
+         * ActivityOptionsCompat.makeSceneTransitionAnimation( activity,
+         * transitionView, LOG_TAG);
+         */
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
+                (int) transitionView.getTranslationX(), (int) transitionView.getTranslationY(),
+                transitionView.getWidth(), transitionView.getHeight());
         Intent intent = new Intent(activity, ViewNoteActivity.class);
         intent.putExtra("Note", note);
-        ActivityCompat.startActivityForResult(activity, intent, BaseActivity.VIEW_CODE, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, BaseActivity.VIEW_CODE,
+                options.toBundle());
     }
 
     private void shareNote() {
         Log.d(LOG_TAG, "Inside ShareNote");
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "From - Type Anything");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, mNote.getNote());
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, mNote.getTitle());
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, mNote.getNote() + "\n\nShared from JustNotes");
         startActivity(Intent.createChooser(sharingIntent, "Choose option"));
     }
 
     private void deleteNote() {
         Log.d(LOG_TAG, "Inside DeleteNote");
-        BaseActivity.db.deleteNote(mNote);
+        DatabaseHelper.getInstance(ViewNoteActivity.this).deleteNote(mNote);
         setResult(RESULT_OK);
         finish();
     }
-    
+
     @Override
     public void onBackPressed() {
-    	// TODO Auto-generated method stub
-    	if (updated) {
-    		setResult(RESULT_OK);
-    	} else {
-    		setResult(RESULT_CANCELED);
-    	}
-    	super.onBackPressed();
+        // TODO Auto-generated method stub
+        if (updated) {
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
+        super.onBackPressed();
     }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		// Check which request we're responding to
-	    if (requestCode == BaseActivity.INPUT_CODE) {
-	        // Make sure the request was successful
-	        if (resultCode == RESULT_OK) {
-	        	mNote = data.getParcelableExtra("Note");
-	        	noteTitleView.setText(mNote.getTitle());
-	        	noteTextView.setText(mNote.getNote());
-	        	updated = true;
-	        } else {
-	        	setResult(RESULT_CANCELED);
-	        }
-	    }
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        // Check which request we're responding to
+        if (requestCode == BaseActivity.INPUT_CODE) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                mNote = data.getParcelableExtra("Note");
+                noteTitleView.setText(mNote.getTitle());
+                noteTextView.setText(mNote.getNote());
+                noteTitleView.setVisibility(View.VISIBLE);
+                updated = true;
+            } else {
+                setResult(RESULT_CANCELED);
+            }
+        }
+    }
 }
