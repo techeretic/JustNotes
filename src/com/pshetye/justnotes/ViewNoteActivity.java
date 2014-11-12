@@ -1,7 +1,10 @@
 
 package com.pshetye.justnotes;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -40,6 +43,7 @@ public class ViewNoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "Inside onCreate");
+        setWindowExitTransition();
 
         mNote = (MyNote) getIntent().getParcelableExtra("Note");
         noteContent = mNote.getNote();
@@ -51,28 +55,20 @@ public class ViewNoteActivity extends BaseActivity {
         noteTitleView = (TextView) findViewById(R.id.notetitleview);
         if (noteTitle.isEmpty()) {
             noteTitleView.setVisibility(View.GONE);
-            noteTextView.setPaddingRelative(0, 30, 0, 0);
         } else {
             noteTitleView.setText(noteTitle);
             noteTitleView.setMovementMethod(new ScrollingMovementMethod());
-            noteTitleView.setPaddingRelative(0, 30, 0, 0);
         }
 
         noteTextView.setText(noteContent);
         noteTextView.setMovementMethod(new ScrollingMovementMethod());
-
-        Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.abc_slide_in_top);
-        slideIn.setDuration(750);
-
         // Share Button - Note Fragment
         fab_share_btn = new FloatingActionButton.Builder(this)
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_share))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
                 .withGravity(Gravity.TOP | Gravity.END).withMargins(15, 15, 0, 0).create();
-        fab_share_btn.setAnimation(slideIn);
+        fab_share_btn.setVisibility(View.GONE);
         fab_share_btn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -85,10 +81,8 @@ public class ViewNoteActivity extends BaseActivity {
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_discard))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
                 .withGravity(Gravity.TOP | Gravity.END).withMargins(0, 15, 65, 0).create();
-
-        fab_delete_btn.setAnimation(slideIn);
+        fab_delete_btn.setVisibility(View.GONE);
         fab_delete_btn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -101,10 +95,8 @@ public class ViewNoteActivity extends BaseActivity {
                 .withDrawable(getResources().getDrawable(R.drawable.ic_action_edit))
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
                 .withGravity(Gravity.TOP | Gravity.END).withMargins(0, 15, 130, 0).create();
-
-        fab_edit_btn.setAnimation(slideIn);
+        fab_edit_btn.setVisibility(View.GONE);
         fab_edit_btn.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -121,14 +113,12 @@ public class ViewNoteActivity extends BaseActivity {
     }
 
     public static void launchViewNote(BaseActivity activity, View transitionView, MyNote note) {
-        /*
-         * ActivityOptionsCompat options =
-         * ActivityOptionsCompat.makeSceneTransitionAnimation( activity,
-         * transitionView, LOG_TAG);
-         */
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
+        
+         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation( activity,
+                         transitionView, "noteview");
+        /*ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
                 (int) transitionView.getTranslationX(), (int) transitionView.getTranslationY(),
-                transitionView.getWidth(), transitionView.getHeight());
+                transitionView.getWidth(), transitionView.getHeight());*/
         Intent intent = new Intent(activity, ViewNoteActivity.class);
         intent.putExtra("Note", note);
         ActivityCompat.startActivityForResult(activity, intent, BaseActivity.VIEW_CODE,
@@ -159,6 +149,16 @@ public class ViewNoteActivity extends BaseActivity {
         } else {
             setResult(RESULT_CANCELED);
         }
+        Animation slideOut = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.abc_slide_out_top);
+        slideOut.setDuration(750);
+        fab_delete_btn.setAnimation(slideOut);
+        fab_edit_btn.setAnimation(slideOut);
+        fab_share_btn.setAnimation(slideOut);
+
+        fab_delete_btn.animate();
+        fab_edit_btn.animate();
+        fab_share_btn.animate();
         super.onBackPressed();
     }
 
@@ -171,13 +171,75 @@ public class ViewNoteActivity extends BaseActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 mNote = data.getParcelableExtra("Note");
-                noteTitleView.setText(mNote.getTitle());
+                noteTitle = mNote.getTitle();
+                if (noteTitle.isEmpty()) {
+                    noteTitleView.setVisibility(View.GONE);
+                } else {
+                    noteTitleView.setVisibility(View.VISIBLE);
+                    noteTitleView.setText(noteTitle);
+                    noteTitleView.setMovementMethod(new ScrollingMovementMethod());
+                }
                 noteTextView.setText(mNote.getNote());
-                noteTitleView.setVisibility(View.VISIBLE);
                 updated = true;
             } else {
                 setResult(RESULT_CANCELED);
             }
+        }
+    }
+    
+    @TargetApi(Build.VERSION_CODES.L)
+    private void setWindowExitTransition() {
+        /*Transition exp = new Fade();
+        exp.setDuration(750);
+        getWindow().setExitTransition(exp);*/
+    }
+    
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        setWindowExitTransition();
+        animateFAB(getApplicationContext(),"IN");
+    }
+
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        animateFAB(getApplicationContext(),"OUT");
+    }
+
+    private void animateFAB(Context context, String direction) {
+        if (direction.equals("IN")) {
+            Animation slideInTop = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.abc_slide_in_top);
+            slideInTop.setDuration(750);
+            fab_delete_btn.setAnimation(slideInTop);
+            fab_delete_btn.animate();
+            fab_delete_btn.setVisibility(View.VISIBLE);
+
+            fab_edit_btn.setAnimation(slideInTop);
+            fab_edit_btn.animate();
+            fab_edit_btn.setVisibility(View.VISIBLE);
+
+            fab_share_btn.setAnimation(slideInTop);
+            fab_share_btn.animate();
+            fab_share_btn.setVisibility(View.VISIBLE);
+        } else {
+            Animation slideOutTop = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.abc_slide_out_top);
+            slideOutTop.setDuration(750);
+            fab_delete_btn.setAnimation(slideOutTop);
+            fab_delete_btn.animate();
+            fab_delete_btn.setVisibility(View.GONE);
+
+            fab_edit_btn.setAnimation(slideOutTop);
+            fab_edit_btn.animate();
+            fab_edit_btn.setVisibility(View.GONE);
+
+            fab_share_btn.setAnimation(slideOutTop);
+            fab_share_btn.animate();
+            fab_share_btn.setVisibility(View.GONE);
         }
     }
 }

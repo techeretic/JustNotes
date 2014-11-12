@@ -112,8 +112,9 @@ public class InputActivity extends BaseActivity {
     }
 
     public static void launchInput(BaseActivity activity, View transitionView, MyNote note) {
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                activity, transitionView, LOG_TAG);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
+                (int) transitionView.getTranslationX(), (int) transitionView.getTranslationY(),
+                transitionView.getWidth(), transitionView.getHeight());
         Intent intent = new Intent(activity, InputActivity.class);
         intent.putExtra("Note", note);
         ActivityCompat.startActivityForResult(activity, intent, BaseActivity.INPUT_CODE,

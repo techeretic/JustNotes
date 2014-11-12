@@ -4,11 +4,13 @@ package com.pshetye.justnotes;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -44,9 +46,9 @@ public class NoteActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        Animation slideBottom = AnimationUtils.loadAnimation(getApplicationContext(),
+        Animation slideInBottom = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.abc_slide_in_bottom);
-        slideBottom.setDuration(750);
+        slideInBottom.setDuration(750);
 
         // Add Button - Holder Fragment
         fab_add_btn = new FloatingActionButton.Builder(this)
@@ -54,13 +56,36 @@ public class NoteActivity extends BaseActivity {
                 .withButtonColor(getResources().getColor(R.color.accent_blue))
                 .withGravity(Gravity.BOTTOM | Gravity.END).withMargins(0, 0, 15, 15).create();
 
-        fab_add_btn.setAnimation(slideBottom);
+        fab_add_btn.setAnimation(slideInBottom);
         fab_add_btn.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 InputActivity.launchInput(NoteActivity.this, v, LOG_TAG);
+            }
+        });
+        
+        mRecyclerView.setOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // TODO Auto-generated method stub
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // special handler to avoid displaying half elements
+                    //recyclerView.scrollTo(rec, y);
+                    animateFAB(getApplicationContext(), "IN");
+                } else {
+                    animateFAB(getApplicationContext(), "OUT");
+                }
+                recyclerView.animate();
+            }
+            
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                // TODO Auto-generated method stub
+                super.onScrolled(recyclerView, dx, dy);
+                recyclerView.animate();
             }
         });
     }
@@ -79,12 +104,14 @@ public class NoteActivity extends BaseActivity {
             Log.d(LOG_TAG, "doUpdate is FALSE");
         }
         doUpdate = true;
+        animateFAB(getApplicationContext(), "IN");
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
+        animateFAB(getApplicationContext(), "OUT");
     }
 
     @Override
@@ -107,6 +134,24 @@ public class NoteActivity extends BaseActivity {
                 Log.d(LOG_TAG, "NOT Gonna Update the Notes List");
                 doUpdate = false;
             }
+        }
+    }
+
+    private void animateFAB(Context context, String direction) {
+        if (direction.equals("IN")) {
+            Animation slideInBottom = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.abc_slide_in_bottom);
+            slideInBottom.setDuration(750);
+            fab_add_btn.setAnimation(slideInBottom);
+            fab_add_btn.animate();
+            fab_add_btn.setVisibility(View.VISIBLE);
+        } else {
+            Animation slideOutBottom = AnimationUtils.loadAnimation(getApplicationContext(),
+                    R.anim.abc_slide_out_bottom);
+            slideOutBottom.setDuration(750);
+            fab_add_btn.setAnimation(slideOutBottom);
+            fab_add_btn.animate();
+            fab_add_btn.setVisibility(View.INVISIBLE);
         }
     }
 }

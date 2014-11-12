@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -50,6 +51,15 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                     ViewNoteActivity.launchViewNote((BaseActivity) mContext, v, note);
                 }
             });
+            
+            parentView.setOnLongClickListener(new OnLongClickListener() {
+                
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d(LOG_TAG, "In LongClick Listener with tag = " + (int) v.getTag());
+                    return false;
+                }
+            });
         }
     }
 
@@ -75,11 +85,16 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.noteTitle.setText(mNotes.get(position).getTitle());
+        if (mNotes.get(position).getTitle().isEmpty()) {
+            holder.noteTitle.setVisibility(View.GONE);
+            holder.noteText.setTextSize(20);
+        } else {
+            holder.noteTitle.setVisibility(View.VISIBLE);
+            holder.noteTitle.setText(mNotes.get(position).getTitle());
+        }
         holder.noteText.setText(mNotes.get(position).getNote());
         holder.noteDate.setText(mNotes.get(position).getDate());
         holder.parentView.setTag(position);
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)

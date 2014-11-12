@@ -15,6 +15,8 @@ public final class R {
         public static final int abc_slide_in_top=0x7f040003;
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
+        public static final int left2right=0x7f040006;
+        public static final int right2left=0x7f040007;
     }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
@@ -1676,7 +1678,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f050030;
         public static final int action_mode_bar_stub=0x7f05002f;
         public static final int action_mode_close_button=0x7f050022;
-        public static final int action_settings=0x7f05004b;
+        public static final int action_settings=0x7f05004c;
         public static final int activity_chooser_view_content=0x7f050023;
         public static final int always=0x7f05000d;
         public static final int beginning=0x7f050012;
@@ -1699,7 +1701,7 @@ containing a value of this type.
         public static final int icon=0x7f050028;
         public static final int ifRoom=0x7f05000c;
         public static final int image=0x7f050025;
-        public static final int layout_view=0x7f050047;
+        public static final int layout_view=0x7f050046;
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050027;
         public static final int middle=0x7f050013;
@@ -1707,8 +1709,8 @@ containing a value of this type.
         public static final int never=0x7f05000b;
         public static final int none=0x7f050004;
         public static final int normal=0x7f050001;
-        public static final int notetitleview=0x7f050045;
-        public static final int noteview=0x7f050046;
+        public static final int notetitleview=0x7f050047;
+        public static final int noteview=0x7f050048;
         public static final int progress_circular=0x7f05001e;
         public static final int progress_horizontal=0x7f05001f;
         public static final int radio=0x7f05002d;
@@ -1729,9 +1731,10 @@ containing a value of this type.
         public static final int split_action_bar=0x7f05001b;
         public static final int submit_area=0x7f05003e;
         public static final int tabMode=0x7f050003;
-        public static final int textView0=0x7f050048;
-        public static final int textView1=0x7f050049;
-        public static final int textView2=0x7f05004a;
+        public static final int temp_view=0x7f050045;
+        public static final int textView0=0x7f050049;
+        public static final int textView1=0x7f05004a;
+        public static final int textView2=0x7f05004b;
         public static final int title=0x7f050029;
         public static final int top=0x7f050015;
         public static final int up=0x7f050018;
