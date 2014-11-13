@@ -24,7 +24,7 @@
         android:gravity="top|start"        
         android:isScrollContainer="true"
         android:hint="@string/title_hint"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:inputType="textShortMessage|textMultiLine|textCapWords"
         android:background="@color/background_floating_material_light"
         android:layout_below="@id/my_awesome_toolbar" >

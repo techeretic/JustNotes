@@ -1,6 +1,9 @@
 
 package com.pshetye.justnotes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +11,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -113,8 +119,14 @@ public class ViewNoteActivity extends BaseActivity {
     }
 
     public static void launchViewNote(BaseActivity activity, View transitionView, MyNote note) {
-        
-         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation( activity,
+		List<Pair<View, String>> pairs = new ArrayList<>();
+		pairs.add(Pair.create(activity.findViewById(android.R.id.navigationBarBackground),
+		        Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+		pairs.add(Pair.create(activity.findViewById(android.R.id.statusBarBackground),
+		        Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+		Bundle options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, 
+		        pairs.toArray(new Pair[pairs.size()])).toBundle();
+        ActivityOptionsCompat options2 = ActivityOptionsCompat.makeSceneTransitionAnimation( activity,
                          transitionView, "noteview");
         /*ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(transitionView,
                 (int) transitionView.getTranslationX(), (int) transitionView.getTranslationY(),
@@ -122,7 +134,7 @@ public class ViewNoteActivity extends BaseActivity {
         Intent intent = new Intent(activity, ViewNoteActivity.class);
         intent.putExtra("Note", note);
         ActivityCompat.startActivityForResult(activity, intent, BaseActivity.VIEW_CODE,
-                options.toBundle());
+                options);
     }
 
     private void shareNote() {

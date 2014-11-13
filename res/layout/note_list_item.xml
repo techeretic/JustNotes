@@ -23,32 +23,30 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:ellipsize="end"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:theme="@style/Base.TextAppearance.AppCompat.Headline" />
+        	android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 	    <TextView
 	        android:id="@+id/textView1"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:gravity="fill_vertical"
-            android:maxLines="8"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="18sp"
+	        android:maxLines="8"
+	        android:paddingTop="15dp"
+	        android:paddingBottom="15dp"
+	        android:paddingStart="10dp"
+	        android:paddingEnd="10dp"
+	        android:layout_marginBottom="5dp"
+        	android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 	        android:ellipsize="end" />
 	    <TextView
 	        android:id="@+id/textView2"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-            android:gravity="bottom|end"
-            android:layout_gravity="bottom|end"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
+	        android:gravity="bottom|end"
+	        android:layout_gravity="bottom|end"
+	        android:paddingTop="15dp"
+	        android:paddingBottom="15dp"
+	        android:paddingStart="15dp"
+	        android:paddingEnd="15dp"
 	        android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>
