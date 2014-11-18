@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:transitionName="noteview"
         android:layout_below="@id/temp_view" >
 	    <TextView
 	        android:id="@+id/notetitleview"
@@ -32,13 +31,12 @@
 	        android:isScrollContainer="true"
 	        android:background="@color/background_floating_material_light"
 	        android:scrollbars = "vertical"
-	        android:textSize="25sp"
 	        android:autoLink="web"
 	        android:linksClickable="true"
-	        android:textStyle="bold" />
+        	android:textAppearance="@style/TextAppearance.AppCompat.Title" />
         
 	    <TextView
-	        android:id="@+id/noteview"
+	        android:id="@+id/notetextview"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginStart="10dp"
@@ -49,8 +47,8 @@
 	        android:isScrollContainer="true"
 	        android:background="@color/background_floating_material_light"
 	        android:scrollbars = "vertical"
-	        android:textSize="18sp"
 	        android:autoLink="web"
-	        android:linksClickable="true" />
+	        android:linksClickable="true"
+        	android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </LinearLayout>
 </RelativeLayout>

@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
@@ -17,6 +14,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     public static final int VIEW_CODE = 1;
 
     public static final int INPUT_CODE = 2;
+    
+    private boolean useTBasAB = true;
 
     protected abstract int getLayoutResource();
     
@@ -29,22 +28,22 @@ public abstract class BaseActivity extends ActionBarActivity {
         setContentView(getLayoutResource());
 
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
-
-        if (toolbar != null) {
+        if (toolbar != null && useTBasAB) {
+        	toolbar.setTitleTextColor(Color.WHITE);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
+    
+    public void setToolbarFlag(boolean useTBasAB) {
+    	this.useTBasAB = useTBasAB;
+    }
 
-    @Override
-    public void onBackPressed() {
-        // TODO Auto-generated method stub
-        /*Animation slideOut = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.abc_slide_out_top);
-        slideOut.setDuration(750);
-        toolbar.setAnimation(slideOut);
-        toolbar.animate();*/
-        toolbar.setVisibility(View.GONE);
-        super.onBackPressed();
+    protected void setActionBarIcon(int iconRes) {
+        toolbar.setNavigationIcon(iconRes);
+    }
+    
+    public Toolbar getToolbar() {
+    	return toolbar;
     }
 }

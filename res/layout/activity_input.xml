@@ -5,31 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pshetye.justnotes.InputActivity">
-	<include
-	    android:id="@+id/my_awesome_toolbar"
-	    layout="@layout/activity_toolbar"/>
 
-    <EditText
-        android:id="@+id/editText0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:paddingTop="15dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:gravity="top|start"        
-        android:isScrollContainer="true"
-        android:hint="@string/title_hint"
-        android:textStyle="bold"
-        android:inputType="textShortMessage|textMultiLine|textCapWords"
-        android:background="@color/background_floating_material_light"
-        android:layout_below="@id/my_awesome_toolbar" >
-    </EditText>
+    <include
+        android:id="@+id/my_awesome_toolbar"
+        layout="@layout/activity_toolbar"/>
 
+	<EditText
+		android:id="@+id/editText0"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginEnd="15dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="15dp"
+		android:paddingTop="15dp"
+		android:paddingStart="15dp"
+		android:paddingEnd="15dp"
+		android:gravity="top|start"        
+		android:isScrollContainer="true"
+		android:hint="@string/title_hint"
+		android:theme="@style/Base.Widget.AppCompat.EditText"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"
+		android:inputType="textShortMessage|textMultiLine|textCapWords"
+		android:background="@color/background_floating_material_light"
+        android:layout_below="@id/my_awesome_toolbar" />
     <EditText
         android:id="@+id/editText1"
         android:layout_width="match_parent"
@@ -46,9 +46,9 @@
         android:gravity="top|start"        
     	android:isScrollContainer="true"
         android:hint="@string/note_hint"
+        android:theme="@style/Base.Widget.AppCompat.EditText"
         android:inputType="textLongMessage|textMultiLine|textWebEditText"
         android:background="@color/background_floating_material_light"
-        android:layout_below="@id/editText0" >
-    </EditText>
+        android:layout_below="@id/editText0" />
 
 </RelativeLayout>

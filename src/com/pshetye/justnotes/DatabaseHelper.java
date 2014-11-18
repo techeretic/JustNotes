@@ -198,4 +198,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
     }
+    
+    //Searching notes based on note content
+    public List<MyNote> searchNotes(String query){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<MyNote> noteList = new ArrayList<MyNote>();
+		String selectQuery = "SELECT  * FROM " + MYNOTES 
+				+ " WHERE UPPER(" + KEY_NOTE + ") LIKE UPPER('%" + query + "%') "
+				+ " OR UPPER(" + KEY_TITLE + ") LIKE UPPER('%" + query + "%') "
+				+ "ORDER BY " + KEY_DATE + " DESC";
+
+		Log.d(LOG_TAG,"Query = " + query);
+		Log.d(LOG_TAG,"selectQuery = " + selectQuery);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                MyNote note = new MyNote();
+                note.setID(Integer.parseInt(cursor.getString(0)));
+                note.setPTitle(cursor.getString(1));
+                note.setPNote(cursor.getString(2));
+                note.setDate(cursor.getString(3));
+                // Adding contact to list
+                noteList.add(note);
+            } while (cursor.moveToNext());
+        }
+
+		Log.d(LOG_TAG,"noteList,SIZE = " + noteList.size());
+        // return contact list
+        return noteList;
+    }
 }

@@ -9,17 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
+public class RecycleAdapter extends
+		RecyclerView.Adapter<RecycleAdapter.ViewHolder> implements
+		View.OnLongClickListener {
     private final static String LOG_TAG = "RecycleAdapter";
 
     private static List<MyNote> mNotes = new ArrayList<MyNote>();
-
-    private static Context mContext = null;
+    
+    private Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -32,41 +32,19 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
 
         public TextView noteDate;
 
-        public View parentView;
-
         public ViewHolder(View view) {
             super(view);
-            parentView = view;
             noteTitle = (TextView) view.findViewById(R.id.textView0);
             noteText = (TextView) view.findViewById(R.id.textView1);
             noteDate = (TextView) view.findViewById(R.id.textView2);
-
-            parentView.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    Log.d(LOG_TAG, "Inside onClick");
-                    MyNote note = mNotes.get((int) v.getTag());
-                    ViewNoteActivity.launchViewNote((BaseActivity) mContext, v, note);
-                }
-            });
-            
-            parentView.setOnLongClickListener(new OnLongClickListener() {
-                
-                @Override
-                public boolean onLongClick(View v) {
-                    Log.d(LOG_TAG, "In LongClick Listener with tag = " + (int) v.getTag());
-                    return false;
-                }
-            });
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public RecycleAdapter(List<MyNote> objects, Context context) {
+    	Log.d(LOG_TAG, "Inside Constructor");
+    	mContext = context;
         mNotes = objects;
-        mContext = context;
     }
 
     // Create new views (invoked by the layout manager)
@@ -94,7 +72,6 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         }
         holder.noteText.setText(mNotes.get(position).getNote());
         holder.noteDate.setText(mNotes.get(position).getDate());
-        holder.parentView.setTag(position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -102,4 +79,10 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public int getItemCount() {
         return mNotes.size();
     }
+
+	@Override
+	public boolean onLongClick(View view) {
+		view = LayoutInflater.from(mContext).inflate(0, null);
+		return true;
+	}
 }

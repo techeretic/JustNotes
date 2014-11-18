@@ -34,6 +34,9 @@ public class InputActivity extends BaseActivity {
         if (mNote != null) {
             noteContent = mNote.getNote();
             noteTitle = mNote.getTitle();
+    		setActionBarIcon(R.drawable.ic_action_edit);
+        } else {
+    		setActionBarIcon(R.drawable.ic_action_new);
         }
 
         Animation slideIn = AnimationUtils.loadAnimation(getApplicationContext(),

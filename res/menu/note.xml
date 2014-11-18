@@ -1,11 +1,33 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"    
+    xmlns:justnotes="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.pshetye.justnotes.NoteActivity" >
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:showAsAction="always"
+        justnotes:showAsAction="always"
+        android:icon="@drawable/ic_action_edit"
+        android:title="@string/action_edit"
+        style="@android:style/Widget.ActionButton" />
 
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        justnotes:showAsAction="always"
+        android:icon="@drawable/ic_action_discard"
+        android:title="@string/action_delete"
+        style="@android:style/Widget.ActionButton" />
+
+    <item
+        android:id="@+id/action_share"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        justnotes:showAsAction="always"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/action_share"
+        style="@android:style/Widget.ActionButton" />
+    
 </menu>
