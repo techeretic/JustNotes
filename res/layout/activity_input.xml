@@ -28,6 +28,8 @@
 		android:hint="@string/title_hint"
 		android:theme="@style/Base.Widget.AppCompat.EditText"
 		android:textAppearance="@style/TextAppearance.AppCompat.Title"
+		android:textColor="?attr/eTextColor"
+		android:textColorHint="?attr/hTextColor"
 		android:inputType="textShortMessage|textMultiLine|textCapSentences"
         android:layout_below="@id/my_awesome_toolbar" />
     <EditText
@@ -47,6 +49,8 @@
     	android:isScrollContainer="true"
         android:hint="@string/note_hint"
         android:theme="@style/Base.Widget.AppCompat.EditText"
+        android:textColor="?attr/eTextColor"
+        android:textColorHint="?attr/hTextColor"
         android:inputType="textLongMessage|textMultiLine|textWebEditText|textCapSentences"
         android:layout_below="@id/editText0" />
 

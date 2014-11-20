@@ -24,6 +24,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_light</item>
         <item name="backgroundcolor">@color/background_material_dark</item>
         <item name="fab_color">@color/primary_dark_material_dark</item>
+        <item name="eTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
     <style name="AppThemeDark" parent="AppBaseThemeDark">
     </style>
@@ -48,6 +50,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_dark</item>
         <item name="backgroundcolor">@color/background_material_light</item>
         <item name="fab_color">@color/primary_dark_material_light</item>
+        <item name="eTextColor">@color/abc_primary_text_material_light</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
     <style name="AppThemeLight" parent="AppBaseThemeLight">
     </style>
@@ -72,6 +76,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_dark</item>
         <item name="backgroundcolor">@color/background_material_dark</item>
         <item name="fab_color">@color/primary_dark_material_dark</item>
+        <item name="eTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
     <style name="AppThemeRedDark" parent="AppBaseThemeRedDark">
     </style>
@@ -96,6 +102,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_light</item>
         <item name="backgroundcolor">@color/background_material_light</item>
         <item name="fab_color">@color/primary_dark_material_light</item>
+        <item name="eTextColor">@color/abc_primary_text_material_light</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
     <style name="AppThemeRedLight" parent="AppBaseThemeRedLight">
     </style>
@@ -120,6 +128,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_dark</item>
         <item name="backgroundcolor">@color/background_material_dark</item>
         <item name="fab_color">@color/primary_dark_material_dark</item>
+        <item name="eTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
 
     <!-- Application theme. BLUE  ******************************************* -->
@@ -142,6 +152,8 @@
         <item name="homeButtonViewNote">@drawable/ic_speaker_notes_light</item>
         <item name="backgroundcolor">@color/background_material_light</item>
         <item name="fab_color">@color/primary_dark_material_light</item>
+        <item name="eTextColor">@color/abc_primary_text_material_light</item>
+        <item name="hTextColor">@color/dark_gray</item>
     </style>
     <style name="AppThemeBlueLight" parent="AppBaseThemeBlueLight">
     </style>

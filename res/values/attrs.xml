@@ -11,4 +11,6 @@
     <attr name="homeButtonViewNote"/>
     <attr name="backgroundcolor" format="color" />
     <attr name="fab_color" format="color" />
+    <attr name="eTextColor" format="color" />
+    <attr name="hTextColor" format="color" />
 </resources>
