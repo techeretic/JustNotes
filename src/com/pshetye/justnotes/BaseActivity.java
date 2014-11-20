@@ -68,7 +68,9 @@ public abstract class BaseActivity extends ActionBarActivity {
             }
         }
         setContentView(getLayoutResource());
-        statusBarColor();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.L) {
+            statusBarColor();
+        }
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
