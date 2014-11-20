@@ -8,8 +8,16 @@
         android:orderInCategory="100"
         android:showAsAction="collapseActionView|always"
         justnotes:showAsAction="collapseActionView|always"
-        android:icon="@drawable/ic_search"
+        android:icon="?attr/searchButton"
         android:title="@string/action_search"
         justnotes:actionViewClass="android.support.v7.widget.SearchView" />
+    
+    <item
+        android:id="@+id/theme"
+        android:orderInCategory="100"
+        android:showAsAction="collapseActionView|always"
+        justnotes:showAsAction="collapseActionView|always"
+        android:icon="?attr/paletteButton"
+        android:title="@string/action_theme" />
     
 </menu>

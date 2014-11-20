@@ -1,6 +1,11 @@
 
 package com.pshetye.justnotes;
 
+import com.pshetye.justnotes.adapters.RecycleAdapter;
+import com.pshetye.justnotes.adapters.RecyclerItemClickListener;
+import com.pshetye.justnotes.database.DatabaseHelper;
+import com.pshetye.justnotes.database.MyNote;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +33,10 @@ public class SearchResultsActivity extends BaseActivity {
     @SuppressWarnings("rawtypes")
     private RecyclerView.Adapter mAdapter;
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         handleIntent(getIntent());
     }
 
@@ -44,33 +49,27 @@ public class SearchResultsActivity extends BaseActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             setTitle(getResources().getString(R.string.search_results) + " for '" + query + "'");
-            //use the query to search your data somehow
+            // use the query to search your data somehow
             sMyNotes = DatabaseHelper.getInstance(SearchResultsActivity.this).searchNotes(query);
             showResults();
         }
     }
 
-	@Override
-	protected int getLayoutResource() {
-		return R.layout.activity_note;
-	}
-	
-	public void showResults() {
-		int orientation = getScreenOrientation();
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_note;
+    }
+
+    public void showResults() {
+        int orientation = getScreenOrientation();
         mRecyclerView = (RecyclerView) findViewById(R.id.ListView);
-        /*
-        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ||
-        		orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-        	mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                || orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
+                    StaggeredGridLayoutManager.VERTICAL));
         } else {
-        	mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        }
-        */
-        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ||
-        		orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-        	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        } else {
-        	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
+                    StaggeredGridLayoutManager.VERTICAL));
         }
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -84,7 +83,7 @@ public class SearchResultsActivity extends BaseActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 recyclerView.animate();
             }
-            
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
@@ -93,16 +92,17 @@ public class SearchResultsActivity extends BaseActivity {
             }
         });
 
-		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(SearchResultsActivity.this,
-				new RecyclerItemClickListener.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-                Log.d(LOG_TAG, "Inside onClick");
-                MyNote note = sMyNotes.get(position);
-                ViewNoteActivity.launchViewNote(SearchResultsActivity.this, view.findViewById(R.id.temp_view), note);
-			}
-		}));
-	}
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(
+                SearchResultsActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d(LOG_TAG, "Inside onClick");
+                        MyNote note = sMyNotes.get(position);
+                        ViewNoteActivity.launchViewNote(SearchResultsActivity.this,
+                                view.findViewById(R.id.temp_view), note);
+                    }
+                }));
+    }
 
     private int getScreenOrientation() {
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -112,11 +112,10 @@ public class SearchResultsActivity extends BaseActivity {
         int height = dm.heightPixels;
         int orientation;
         // if the device's natural orientation is portrait:
-        if ((rotation == Surface.ROTATION_0
-                || rotation == Surface.ROTATION_180) && height > width ||
-            (rotation == Surface.ROTATION_90
-                || rotation == Surface.ROTATION_270) && width > height) {
-            switch(rotation) {
+        if ((rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) && height > width
+                || (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
+                && width > height) {
+            switch (rotation) {
                 case Surface.ROTATION_0:
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     break;
@@ -124,24 +123,21 @@ public class SearchResultsActivity extends BaseActivity {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                     break;
                 case Surface.ROTATION_180:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                     break;
                 case Surface.ROTATION_270:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     break;
                 default:
-                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " +
-                            "portrait.");
+                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " + "portrait.");
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    break;              
+                    break;
             }
         }
         // if the device's natural orientation is landscape or if the device
         // is square:
         else {
-            switch(rotation) {
+            switch (rotation) {
                 case Surface.ROTATION_0:
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                     break;
@@ -149,18 +145,15 @@ public class SearchResultsActivity extends BaseActivity {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     break;
                 case Surface.ROTATION_180:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     break;
                 case Surface.ROTATION_270:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                     break;
                 default:
-                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " +
-                            "landscape.");
+                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " + "landscape.");
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                    break;              
+                    break;
             }
         }
 

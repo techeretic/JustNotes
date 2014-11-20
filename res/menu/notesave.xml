@@ -8,7 +8,7 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         justnotes:showAsAction="always"
-        android:icon="@drawable/ic_action_save"
+        android:icon="?attr/saveButton"
         android:title="@string/action_save"
         style="@android:style/Widget.ActionButton" />
     

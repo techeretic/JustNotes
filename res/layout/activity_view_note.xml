@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pshetye.justnotes.ViewNoteActivity">
+    tools:context="com.pshetye.justnotes.ViewNoteActivity"
+    android:background="?attr/backgroundcolor" >
 
     <include
         android:id="@+id/my_awesome_toolbar"
@@ -11,7 +12,7 @@
     <View 
         android:id="@+id/temp_view"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="2dp"
         android:orientation="vertical"
         android:layout_below="@id/my_awesome_toolbar" />
     <LinearLayout 
@@ -29,7 +30,6 @@
 	        android:layout_marginTop="15dp"
 	        android:gravity="top|start"
 	        android:isScrollContainer="true"
-	        android:background="@color/background_floating_material_light"
 	        android:scrollbars = "vertical"
 	        android:autoLink="web"
 	        android:linksClickable="true"
@@ -45,7 +45,6 @@
 	        android:layout_marginBottom="15dp"
 	        android:gravity="top|start"        
 	        android:isScrollContainer="true"
-	        android:background="@color/background_floating_material_light"
 	        android:scrollbars = "vertical"
 	        android:autoLink="web"
 	        android:linksClickable="true"

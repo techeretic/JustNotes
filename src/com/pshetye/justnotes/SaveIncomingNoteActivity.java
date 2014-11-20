@@ -1,6 +1,9 @@
 
 package com.pshetye.justnotes;
 
+import com.pshetye.justnotes.database.DatabaseHelper;
+import com.pshetye.justnotes.database.MyNote;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +27,7 @@ public class SaveIncomingNoteActivity extends Activity {
                 MyNote note = new MyNote((int) System.currentTimeMillis(), title,
                         intent.getStringExtra(Intent.EXTRA_TEXT), "");
                 DatabaseHelper.getInstance(SaveIncomingNoteActivity.this).addNote(note);
-                NoteActivity.doUpdate = true;
+                NoteActivity.sDoUpdate = true;
                 Toast.makeText(SaveIncomingNoteActivity.this, "Saved to JustNotes",
                         Toast.LENGTH_LONG).show();
                 finish();

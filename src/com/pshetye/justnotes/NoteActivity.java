@@ -1,12 +1,27 @@
 
 package com.pshetye.justnotes;
 
+import com.pshetye.justnotes.adapters.RecycleAdapter;
+import com.pshetye.justnotes.adapters.RecyclerItemClickListener;
+import com.pshetye.justnotes.database.DatabaseHelper;
+import com.pshetye.justnotes.database.MyNote;
+import com.pshetye.justnotes.fab.FloatingActionButton;
+import com.pshetye.justnotes.util.NoteAnimator;
+import com.pshetye.justnotes.util.StyleAttributes;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -24,75 +39,25 @@ import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 
 public class NoteActivity extends BaseActivity {
 
     private static final String LOG_TAG = "NoteActivity";
+    public static final String SHARED_PREF_APP_DATA = "APP_DATA";
 
     protected Object mActionMode;
 
-    private FloatingActionButton fab_add_btn = null;
+    private FloatingActionButton mFAddButton = null;
 
     private static List<MyNote> sMyNotes = new ArrayList<MyNote>();
 
-    public static boolean doUpdate = false;
-
-    MyNoteAdapter mNoteAdapter = null;
-/*
-	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-		// Called when the action mode is created; startActionMode() was called
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			// inflate a menu resource providing context menu items
-			MenuInflater inflater = mode.getMenuInflater();
-			// assumes that you have "contexual.xml" menu resources
-			inflater.inflate(R.menu.note, menu);
-			return true;
-		}
-
-		// called each time the action mode is shown. Always called after
-		// onCreateActionMode, but
-		// may be called multiple times if the mode is invalidated.
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			return false; // Return false if nothing is done
-		}
-
-		// called when the user selects a contextual menu item
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
-			case R.id.action_delete:
-				Toast.makeText(NoteActivity.this, "Selected DELETE",
-						Toast.LENGTH_SHORT).show();
-				mode.finish(); // Action picked, so close the CAB
-				return true;
-			case R.id.action_edit:
-				Toast.makeText(NoteActivity.this, "Selected EDIT",
-						Toast.LENGTH_SHORT).show();
-				mode.finish(); // Action picked, so close the CAB
-				return true;
-			case R.id.action_share:
-				Toast.makeText(NoteActivity.this, "Selected SHARE",
-						Toast.LENGTH_SHORT).show();
-				mode.finish(); // Action picked, so close the CAB
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		// called when the user exits the action mode
-		public void onDestroyActionMode(ActionMode mode) {
-			mActionMode = null;
-		}
-	};
-*/
-    int index = 0;
+    public static boolean sDoUpdate = false;
 
     private RecyclerView mRecyclerView;
+    
+    private SharedPreferences mPrefs;
 
     @SuppressWarnings("rawtypes")
     private RecyclerView.Adapter mAdapter;
@@ -101,41 +66,19 @@ public class NoteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, "Inside onCreate");
-
-        int orientation = getScreenOrientation();
         mRecyclerView = (RecyclerView) findViewById(R.id.ListView);
-        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ||
-        		orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-        	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        } else {
-        	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
-        }
-        /*
-        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ||
-        		orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-        	mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        } else {
-        	mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        }
-        */
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        sMyNotes = DatabaseHelper.getInstance(NoteActivity.this).getAllNotes();
-        mAdapter = new RecycleAdapter(sMyNotes, this);
-        mRecyclerView.setAdapter(mAdapter);
-
-        Animation slideInBottom = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.abc_slide_in_bottom);
-        slideInBottom.setDuration(750);
+        displayNotes();
+        mPrefs = getSharedPreferences(
+                SHARED_PREF_APP_DATA, MODE_PRIVATE);
 
         // Add Button - Holder Fragment
-        fab_add_btn = new FloatingActionButton.Builder(this)
-                .withDrawable(getResources().getDrawable(R.drawable.ic_action_new))
-                .withButtonColor(getResources().getColor(R.color.accent_blue))
+        mFAddButton = new FloatingActionButton.Builder(this)
+                .withDrawable(getResources().getDrawable(StyleAttributes.fabAddButton))
+                .withButtonColor(getResources().getColor(StyleAttributes.fab_color))
                 .withGravity(Gravity.BOTTOM | Gravity.END).withMargins(0, 0, 15, 15).create();
-
-        fab_add_btn.setAnimation(slideInBottom);
-        fab_add_btn.setOnClickListener(new OnClickListener() {
+        NoteAnimator.animateFAB(getApplicationContext(), mFAddButton, NoteAnimator.IN,
+                NoteAnimator.BOTTOM);
+        mFAddButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -143,22 +86,24 @@ public class NoteActivity extends BaseActivity {
                 InputActivity.launchInput(NoteActivity.this, v, LOG_TAG);
             }
         });
-        
+
         mRecyclerView.setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 // TODO Auto-generated method stub
                 super.onScrollStateChanged(recyclerView, newState);
-                if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     // special handler to avoid displaying half elements
-                    //recyclerView.scrollTo(rec, y);
-                    animateFAB(getApplicationContext(), "IN");
+                    // recyclerView.scrollTo(rec, y);
+                    NoteAnimator.animateFAB(getApplicationContext(), mFAddButton, NoteAnimator.IN,
+                            NoteAnimator.BOTTOM);
                 } else {
-                    animateFAB(getApplicationContext(), "OUT");
+                    NoteAnimator.animateFAB(getApplicationContext(), mFAddButton, NoteAnimator.OUT,
+                            NoteAnimator.BOTTOM);
                 }
                 recyclerView.animate();
             }
-            
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 // TODO Auto-generated method stub
@@ -167,17 +112,22 @@ public class NoteActivity extends BaseActivity {
             }
         });
 
-		mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(NoteActivity.this,
-				new RecyclerItemClickListener.OnItemClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-                Log.d(LOG_TAG, "Inside onClick");
-                MyNote note = sMyNotes.get(position);
-                ViewNoteActivity.launchViewNote(NoteActivity.this, view.findViewById(R.id.temp_view), note);
-			}
-		}));
-		
-		setActionBarIcon(R.drawable.ic_assignment);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(NoteActivity.this,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d(LOG_TAG, "Inside onClick");
+                        if (mFAddButton.getVisibility() == View.VISIBLE) {
+                            NoteAnimator.animateFAB(getApplicationContext(), mFAddButton,
+                                    NoteAnimator.OUT, NoteAnimator.BOTTOM);
+                        }
+                        MyNote note = sMyNotes.get(position);
+                        ViewNoteActivity.launchViewNote(NoteActivity.this,
+                                view.findViewById(R.id.temp_view), note);
+                    }
+                }));
+
+        setActionBarIcon(StyleAttributes.homeButtonNotes);
     }
 
     @Override
@@ -186,34 +136,36 @@ public class NoteActivity extends BaseActivity {
         // Associate searchable configuration with the SearchView
         MenuItem searchItem = menu.findItem(R.id.search);
         if (searchItem != null) {
-        	Log.d(LOG_TAG, "searchItem is NOT null");
+            Log.d(LOG_TAG, "searchItem is NOT null");
         } else {
-        	Log.d(LOG_TAG, "searchItem is null");
+            Log.d(LOG_TAG, "searchItem is null");
         }
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         if (searchView != null) {
-        	searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        	LinearLayout linearLayout1 = (LinearLayout) searchView.getChildAt(0);
-        	LinearLayout linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
-        	LinearLayout linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
-        	AutoCompleteTextView autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
-        	autoComplete.setOnFocusChangeListener(new OnFocusChangeListener() {
-				
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					// TODO Auto-generated method stub
-					if (hasFocus) {
-				        animateFAB(getApplicationContext(), "OUT");
-					} else {
-				        animateFAB(getApplicationContext(), "IN");
-					}
-				}
-			});
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            LinearLayout linearLayout1 = (LinearLayout) searchView.getChildAt(0);
+            LinearLayout linearLayout2 = (LinearLayout) linearLayout1.getChildAt(2);
+            LinearLayout linearLayout3 = (LinearLayout) linearLayout2.getChildAt(1);
+            AutoCompleteTextView autoComplete = (AutoCompleteTextView) linearLayout3.getChildAt(0);
+            autoComplete.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    // TODO Auto-generated method stub
+                    if (hasFocus) {
+                        NoteAnimator.animateFAB(getApplicationContext(), mFAddButton,
+                                NoteAnimator.OUT, NoteAnimator.BOTTOM);
+                    } else {
+                        NoteAnimator.animateFAB(getApplicationContext(), mFAddButton,
+                                NoteAnimator.IN, NoteAnimator.BOTTOM);
+                    }
+                }
+            });
         } else {
-        	Log.d(LOG_TAG, "searchView is null");
+            Log.d(LOG_TAG, "searchView is null");
         }
-		
+
         return true;
     }
 
@@ -221,7 +173,10 @@ public class NoteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-            	return true;
+                return true;
+            case R.id.theme:
+                createDialog();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -232,30 +187,15 @@ public class NoteActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onResume();
 
-        if (doUpdate) {
-            Log.d(LOG_TAG, "doUpdate is TRUE");
-            sMyNotes = DatabaseHelper.getInstance(NoteActivity.this).getAllNotes();
-            mAdapter = new RecycleAdapter(sMyNotes, this);
-            mRecyclerView.setAdapter(mAdapter);
-            int orientation = getScreenOrientation();
-            if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT ||
-            		orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-            	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-            } else {
-            	mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
-            }
+        if (sDoUpdate) {
+            Log.d(LOG_TAG, "sDoUpdate is TRUE");
+            displayNotes();
         } else {
-            Log.d(LOG_TAG, "doUpdate is FALSE");
+            Log.d(LOG_TAG, "sDoUpdate is FALSE");
         }
-        doUpdate = true;
-        animateFAB(getApplicationContext(), "IN");
-    }
-
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        animateFAB(getApplicationContext(), "OUT");
+        sDoUpdate = true;
+        NoteAnimator.animateFAB(getApplicationContext(), mFAddButton, NoteAnimator.IN,
+                NoteAnimator.BOTTOM);
     }
 
     @Override
@@ -273,31 +213,14 @@ public class NoteActivity extends BaseActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Log.d(LOG_TAG, "Gonna Update the Notes List");
-                doUpdate = true;
+                sDoUpdate = true;
             } else {
                 Log.d(LOG_TAG, "NOT Gonna Update the Notes List");
-                doUpdate = false;
+                sDoUpdate = false;
             }
         }
     }
 
-    private void animateFAB(Context context, String direction) {
-        if (direction.equals("IN")) {
-            Animation slideInBottom = AnimationUtils.loadAnimation(getApplicationContext(),
-                    R.anim.abc_slide_in_bottom);
-            slideInBottom.setDuration(750);
-            fab_add_btn.setAnimation(slideInBottom);
-            fab_add_btn.animate();
-            fab_add_btn.setVisibility(View.VISIBLE);
-        } else {
-            Animation slideOutBottom = AnimationUtils.loadAnimation(getApplicationContext(),
-                    R.anim.abc_slide_out_bottom);
-            slideOutBottom.setDuration(750);
-            fab_add_btn.setAnimation(slideOutBottom);
-            fab_add_btn.animate();
-            fab_add_btn.setVisibility(View.INVISIBLE);
-        }
-    }
     private int getScreenOrientation() {
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
         DisplayMetrics dm = new DisplayMetrics();
@@ -306,11 +229,10 @@ public class NoteActivity extends BaseActivity {
         int height = dm.heightPixels;
         int orientation;
         // if the device's natural orientation is portrait:
-        if ((rotation == Surface.ROTATION_0
-                || rotation == Surface.ROTATION_180) && height > width ||
-            (rotation == Surface.ROTATION_90
-                || rotation == Surface.ROTATION_270) && width > height) {
-            switch(rotation) {
+        if ((rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) && height > width
+                || (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270)
+                && width > height) {
+            switch (rotation) {
                 case Surface.ROTATION_0:
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     break;
@@ -318,24 +240,21 @@ public class NoteActivity extends BaseActivity {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                     break;
                 case Surface.ROTATION_180:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                     break;
                 case Surface.ROTATION_270:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     break;
                 default:
-                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " +
-                            "portrait.");
+                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " + "portrait.");
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    break;              
+                    break;
             }
         }
         // if the device's natural orientation is landscape or if the device
         // is square:
         else {
-            switch(rotation) {
+            switch (rotation) {
                 case Surface.ROTATION_0:
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                     break;
@@ -343,22 +262,83 @@ public class NoteActivity extends BaseActivity {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     break;
                 case Surface.ROTATION_180:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                     break;
                 case Surface.ROTATION_270:
-                    orientation =
-                        ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+                    orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                     break;
                 default:
-                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " +
-                            "landscape.");
+                    Log.e(LOG_TAG, "Unknown screen orientation. Defaulting to " + "landscape.");
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                    break;              
+                    break;
             }
         }
 
         return orientation;
     }
-    
+
+    private void displayNotes() {
+        int orientation = getScreenOrientation();
+        sMyNotes = DatabaseHelper.getInstance(NoteActivity.this).getAllNotes();
+        mAdapter = new RecycleAdapter(sMyNotes, this);
+        mRecyclerView.setAdapter(mAdapter);
+        if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                || orientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
+                    StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
+                    StaggeredGridLayoutManager.VERTICAL));
+        }
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void createDialog() {
+        /** Options for user to select */
+        String choose[] = {
+                "Dark", "Light", "Dark Red", "Light Red", "Dark Blue", "Light Blue"
+        };
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+
+        /** Setting a title for the window */
+        b.setTitle("Choose your Application Theme");
+
+        int existing_theme = mPrefs.getInt("theme", 0);
+        Log.d(LOG_TAG,"Theme info | existing_theme = " + existing_theme);
+
+        /** Setting items to the alert dialog */
+        b.setSingleChoiceItems(choose, existing_theme, null);
+
+        /** Setting a positive button and its listener */
+        b.setPositiveButton("OK", new DialogClickListener());
+
+        /** Setting a positive button and its listener */
+        b.setNegativeButton("Cancel", null);
+
+        /** Creating the alert dialog window using the builder class */
+        AlertDialog d = b.create();
+
+        /** show dialog */
+        d.show();
+    }
+
+    private class DialogClickListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            Log.d(LOG_TAG,"which = " + which);
+            Editor editor = mPrefs.edit();
+            editor.putInt("theme", ((AlertDialog)dialog).getListView().getCheckedItemPosition());
+            editor.commit();
+            Intent intent=new Intent (getBaseContext(), NoteActivity.class);
+
+            AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, 
+            PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT
+                                    | PendingIntent.FLAG_CANCEL_CURRENT));
+            finish();
+        }
+        
+    }
 }

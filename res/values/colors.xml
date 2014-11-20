@@ -6,9 +6,13 @@
     <color name="primary_red">#BD1D1A</color>
     
     <!-- Blue -->
-    <color name="accent_blue">#415AD9</color>
-    <color name="primary_dark_blue">#031575</color>
-    <color name="primary_blue">#1933BB</color>
+    <color name="accent_blue">#5EA5D3</color>
+    <color name="primary_dark_blue">#0065A5</color>
+    <color name="primary_blue">#009CFF</color>
+    
+    <!-- Gray -->
+    <color name="dark_gray">#5A5A5A</color>
+    <color name="light_gray">#E2E2E2</color>
         
     <color name="desc_text">#f5f5f5</color>
     <color name="emailc_text">#8d9c9f</color>
