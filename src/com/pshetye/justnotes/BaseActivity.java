@@ -2,9 +2,10 @@
 package com.pshetye.justnotes;
 
 import com.pshetye.justnotes.util.StyleAttributes;
-
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,12 +62,13 @@ public abstract class BaseActivity extends ActionBarActivity {
                     break;
                 case 5:
                     setTheme(R.style.AppThemeBlueLight);
-                    StyleAttributes.setStyleAttributes(BaseActivity.this, R.style.AppThemeBlueLight);
+                    StyleAttributes
+                            .setStyleAttributes(BaseActivity.this, R.style.AppThemeBlueLight);
                     break;
             }
         }
         setContentView(getLayoutResource());
-
+        statusBarColor();
         toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -77,8 +79,13 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void setActionBarIcon(int iconRes) {
         toolbar.setNavigationIcon(iconRes);
     }
-    
+
     public Toolbar getToolbar() {
     	return toolbar;
+    }
+
+    @TargetApi(Build.VERSION_CODES.L)
+    private void statusBarColor() {
+        getWindow().setStatusBarColor(getResources().getColor(StyleAttributes.colorPrimaryDark));
     }
 }

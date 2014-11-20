@@ -2,7 +2,7 @@
 <resources>
     <!-- Red -->
     <color name="accent_red">#E85956</color>
-    <color name="primary_dark_red">#A10300</color>
+    <color name="primary_dark_red">#9D0D0D</color>
     <color name="primary_red">#BD1D1A</color>
     
     <!-- Blue -->
@@ -21,4 +21,25 @@
     <color name="spinner_select_color">#2396c5</color>
     <color name="desc_text_light">#207ac8</color>
     <color name="learn_more_color">#40afff</color>
+    
+    <!-- Some more colors -->
+    <color name="Blue">#0000ff</color>
+	<color name="Red">#ff0000</color>
+	<color name="Green">#008000</color>
+	<color name="Yellow">#ffff00</color>
+	<color name="Cyan">#00ffff</color>
+	<color name="Dark_Blue">#0000a0</color>
+	<color name="Light_Blue">#add8e6</color>
+	<color name="Purple">#800080</color>
+	<color name="Lime">#00ff00</color>
+	<color name="Fuchsia">#ff00ff</color>
+	<color name="White">#ffffff</color>
+	<color name="Silver">#c0c0c0</color>
+	<color name="Grey">#808080</color>
+	<color name="Black">#000000</color>
+	<color name="orange">#ffa500</color>
+	<color name="Brown">#a52a2a</color>
+	<color name="Maroon">#800000</color>
+	<color name="Olive">#808000</color>
+	<color name="Pink">#f52887</color>
 </resources>
